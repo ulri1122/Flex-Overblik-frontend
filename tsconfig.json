@@ -15,6 +15,15 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "components/sidebar.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "components/sidebar.ts",
+    "pages/checkInScreen.jks",
+    "components/userFound.js",
+    "components/userNotFound.js",
+    "pages/index.js"
+  ],
   "exclude": ["node_modules"]
 }
