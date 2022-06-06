@@ -12,7 +12,7 @@ export default function flexTimeTable({ data }) {
           <div></div>
         </div>
         <div className="border-2 border-solid border-black p-4">
-          {data.checkInDays.map((day, i) => {
+          {data?.checkInDays?.map((day, i) => {
             return (
               <div key={i} className="grid grid-cols-5 text-center ">
                 <div>{moment(day.date).format('YYYY/MM/DD')}</div>

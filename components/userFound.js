@@ -1,4 +1,3 @@
-import Link from 'next/link'
 export default function userFound({ data }) {
   return (
     <div>

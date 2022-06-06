@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Logo from '../assets/images/flexoverblik.png'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
+import axiosToken from '../src/lib/backendAPI'
 
 function checkInScreen() {
   const [cardID, setCardID] = useState('')

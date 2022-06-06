@@ -23,7 +23,10 @@
     "pages/checkInScreen.jks",
     "components/userFound.js",
     "components/userNotFound.js",
-    "pages/index.js"
+    "pages/index.js",
+    "components/sidebar.js",
+    "pages/_app.js",
+    "context/global-context.js"
   ],
   "exclude": ["node_modules"]
 }

@@ -1,9 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faHouseUser,
-  faAmbulance,
-  faAnchor,
-} from '@fortawesome/free-solid-svg-icons'
+import { faHouseUser } from '@fortawesome/free-solid-svg-icons'
 export default function userWorkState({ state }) {
   switch (state) {
     case 'not_checked_in':

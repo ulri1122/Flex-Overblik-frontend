@@ -4,7 +4,7 @@ import moment from 'moment'
 import UserWorkSate from './userWorkState'
 import 'moment-duration-format'
 
-export default function userProfileCard({ user, workState }) {
+export default function userProfileCard({ user, checkInStatus }) {
   return (
     <div>
       <div className="flex justify-center">
@@ -12,9 +12,10 @@ export default function userProfileCard({ user, workState }) {
           width={200}
           height={200}
           src={
-            process.env.NEXT_PUBLIC_IMAGE_URL +
-            (user?.image ?? 'profilepicplaceholder.svg')
+            process.env.NEXT_PUBLIC_URL +
+            (user?.image_path ?? 'storage/profilepicplaceholder.svg')
           }
+          className="rounded-full "
           alt="profile_pic"
         />
       </div>
@@ -25,7 +26,7 @@ export default function userProfileCard({ user, workState }) {
         <div className="pt-10 text-center text-xl ">
           {moment.duration(user?.current_flex, 'seconds').format('hh:mm:ss')}
         </div>
-        <UserWorkSate state={workState} />
+        <UserWorkSate state={checkInStatus} />
       </div>
     </div>
   )

@@ -2,12 +2,16 @@ import axios from 'axios'
 
 import TeamContainer from '../components/teamContainer'
 import AvailableUserWorkStates from '../components/availableUserWorkStates'
+import AddTeam from '../components/addTeam'
 import Image from 'next/image'
 import Logo from '../assets/images/flexoverblik.png'
 
+import { useContext, useEffect } from 'react'
+import GlobalContext from '../context/global-context'
+
 export async function getServerSideProps(context) {
   var data = await axios
-    .get(process.env.BACKEND_API_URL + `getTeams`)
+    .get(process.env.BACKEND_API_URL + `getTeamsWidthUsers`)
     .then((res) => {
       return res.data
     })
@@ -18,8 +22,9 @@ export async function getServerSideProps(context) {
     })
   return { props: { data } }
 }
-
 function DashBoard({ data }) {
+  const globalToken = useContext(GlobalContext)
+
   return (
     <div>
       <div className="grid grid-cols-2">
@@ -28,7 +33,11 @@ function DashBoard({ data }) {
           <Image height={50} width={250} src={Logo} alt="Flex overblik" />
         </div>
       </div>
-      <AvailableUserWorkStates />
+      <div className="grid grid-cols-2">
+        <AvailableUserWorkStates />
+        {globalToken?.userToken ? <AddTeam /> : <div></div>}
+      </div>
+
       <div className=" 2xl;grid-cols-4 grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-4">
         {data.map((team, i) => {
           {

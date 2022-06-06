@@ -12,9 +12,10 @@ export default function userCard({ user }) {
               width={100}
               height={100}
               src={
-                process.env.NEXT_PUBLIC_IMAGE_URL +
-                (user.image ?? 'profilepicplaceholder.svg')
+                process.env.NEXT_PUBLIC_URL +
+                (user?.image_path ?? 'storage/profilepicplaceholder.svg')
               }
+              className="rounded-full "
               alt="profile_pic"
             />
           </div>
@@ -23,7 +24,7 @@ export default function userCard({ user }) {
             <div>{user.current_flex}</div>
           </div>
           <div className="flex items-center justify-center">
-            <UserWorkSate state={user.work_state} />
+            <UserWorkSate state={user.check_in_status} />
           </div>
         </div>
       </Link>

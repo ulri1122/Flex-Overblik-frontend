@@ -27,7 +27,7 @@ export async function getServerSideProps(context) {
 }
 
 export default function userId({ data }) {
-  const [workState, setWorkState] = useState(data.work_state)
+  const [checkInStatus, setCheckInStatus] = useState(data.check_in_state)
   const checkInFromhome = (user_id) => {
     axios
       .post(process.env.NEXT_PUBLIC_API_URL + 'check_in', {
@@ -37,10 +37,10 @@ export default function userId({ data }) {
       .then((res) => {
         console.log(res)
         if (res.data == 'Working_home') {
-          setWorkState(res.data)
+          setCheckInStatus(res.data)
           toast('you have checked in from home')
         } else if (res.data == 'not_checked_in') {
-          setWorkState(res.data)
+          setCheckInStatus(res.data)
           toast('you have checked out')
         } else {
           toast('Wow so error!')
@@ -50,6 +50,7 @@ export default function userId({ data }) {
         toast('Wow so error!')
       })
   }
+  console.log(data)
   return (
     <div>
       <div className="grid grid-cols-3">
@@ -65,7 +66,6 @@ export default function userId({ data }) {
           >
             Working home
           </button>
-          <ToastContainer />
         </div>
         <div className="justify-self-end">
           <Image height={50} width={250} src={Logo} alt="Flex overblik" />
@@ -73,7 +73,7 @@ export default function userId({ data }) {
       </div>
       <div className="grid grid-cols-3">
         <div>
-          <UserProfileCard user={data} workState={workState} />
+          <UserProfileCard user={data} checkInStatus={checkInStatus} />
         </div>
         <div className="col-span-2">
           <FlexTimesTable data={data} />
