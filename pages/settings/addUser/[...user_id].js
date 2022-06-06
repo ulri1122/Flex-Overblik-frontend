@@ -5,6 +5,7 @@ import Logo from '../../../assets/images/flexoverblik.png'
 import axios from 'axios'
 
 import axiosToken from '../../../src/lib/backendAPI'
+import CurrentTeams from '../../../components/settings/currentTeams'
 
 export async function getServerSideProps(context) {
   var user_id = context.query['user_id'][0]
@@ -15,26 +16,29 @@ export async function getServerSideProps(context) {
       },
     })
     .then((res) => {
-      return res?.data
+      return res?.data ?? null
     })
     .catch((err) => {
-      return err?.data
+      return null
     })
   return { props: { data } }
 }
 
 export default function userNotFound({ data }) {
+  const globalToken = useContext(GlobalContext)
+
   const [selectedFile, setSelectedFile] = useState(null)
   const [ProfileUrl, setProfileUrl] = useState(
     process.env.NEXT_PUBLIC_URL +
       (data?.user?.image_path ?? 'storage/profilepicplaceholder.svg')
   )
+  const [userTeams, setUserTeams] = useState(data?.user?.teams ?? null)
 
-  const globalToken = useContext(GlobalContext)
-  if (!globalToken.userToken) {
+  // TODO alt skal laves til hooks
+
+  if (!globalToken.userToken || data == null) {
     return <div>access restricted</div>
   }
-
   const createUpdateUser = (e) => {
     e.preventDefault()
 
@@ -47,7 +51,6 @@ export default function userNotFound({ data }) {
       Saturday: e.target.Saturday.value,
       Sunday: e.target.Sunday.value,
     }
-
     var formData = new FormData()
     formData.append('file', selectedFile)
     formData.append('user_id', data?.user?.id ?? 0)
@@ -55,12 +58,11 @@ export default function userNotFound({ data }) {
     formData.append('email', e.target.email.value)
     formData.append('phone', e.target.phone.value)
     formData.append('card_id', e.target.card_nr.value)
-    formData.append('is_admin', ~~(e.target.is_admin.value == 'on'))
+    formData.append('is_admin', ~~e.target.is_admin.checked)
     formData.append('username', e.target.username.value)
     formData.append('team_id', e.target.team_select.value)
     formData.append('weekdays', JSON.stringify(weekdays))
 
-    console.log(formData)
     axiosToken
       .post(process.env.NEXT_PUBLIC_API_URL + 'users', formData, {
         headers: {
@@ -69,14 +71,16 @@ export default function userNotFound({ data }) {
       })
       .then((res) => {
         console.log(res.data)
+        setUserTeams(res?.data?.teams ?? null)
         setProfileUrl(
           process.env.NEXT_PUBLIC_URL +
             (res?.data?.image_path ?? 'storage/profilepicplaceholder.svg')
         )
       })
-      .catch((err) => {})
+      .catch((err) => {
+        console.log(err)
+      })
   }
-  console.log(data)
   return (
     <div>
       <div>
@@ -240,9 +244,18 @@ export default function userNotFound({ data }) {
             <div></div>
             <div></div>
             <button className="btn btn-blue">save user</button>
-            <div></div>
           </form>
         </div>
+      </div>
+      <h2 className="pt-10 text-xl">remove user from team</h2>
+      <div className="grid grid-cols-4 ">
+        {userTeams?.map((team, i) => {
+          return (
+            <div key={i}>
+              <CurrentTeams team={team} user_id={data?.user?.id} />
+            </div>
+          )
+        })}
       </div>
     </div>
   )
