@@ -1,6 +1,8 @@
 import Image from 'next/image'
 import UserWorkSate from './userWorkState'
 import Link from 'next/link'
+import moment from 'moment'
+import 'moment-duration-format'
 
 export default function userCard({ user }) {
   return (
@@ -21,7 +23,12 @@ export default function userCard({ user }) {
           </div>
           <div>
             <div>{user.name}</div>
-            <div>{user.current_flex}</div>
+
+            <div>
+              {moment
+                .duration(user?.current_flex, 'seconds')
+                .format('hh:mm:ss')}
+            </div>
           </div>
           <div className="flex items-center justify-center">
             <UserWorkSate state={user.check_in_status} />

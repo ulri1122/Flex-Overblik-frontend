@@ -3,9 +3,11 @@ import GlobalContext from '../../../context/global-context'
 import Image from 'next/image'
 import Logo from '../../../assets/images/flexoverblik.png'
 import axios from 'axios'
-
+import { useRouter } from 'next/router'
 import axiosToken from '../../../src/lib/backendAPI'
 import CurrentTeams from '../../../components/settings/currentTeams'
+import { toast } from 'react-toastify'
+import DeleteUserButton from '../../../components/settings/deleteUserButton'
 
 export async function getServerSideProps(context) {
   var user_id = context.query['user_id'][0]
@@ -25,41 +27,97 @@ export async function getServerSideProps(context) {
 }
 
 export default function userNotFound({ data }) {
+  console.log(data)
   const globalToken = useContext(GlobalContext)
-
   const [selectedFile, setSelectedFile] = useState(null)
   const [ProfileUrl, setProfileUrl] = useState(
-    process.env.NEXT_PUBLIC_URL +
-      (data?.user?.image_path ?? 'storage/profilepicplaceholder.svg')
+    process.env.NEXT_PUBLIC_URL + 'storage/profilepicplaceholder.svg'
   )
-  const [userTeams, setUserTeams] = useState(data?.user?.teams ?? null)
+  const [userTeams, setUserTeams] = useState(null)
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [userName, setUserName] = useState('')
+  const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
+  const [cardNr, setCardNr] = useState('')
+  const [monday, setMonday] = useState('')
+  const [tuesday, setTuesday] = useState('')
+  const [wednesday, setWednesday] = useState('')
+  const [thursday, setThursday] = useState('')
+  const [friday, setFriday] = useState('')
+  const [saturday, setSaturday] = useState('')
+  const [sunday, setSunday] = useState('')
 
-  // TODO alt skal laves til hooks
+  const router = useRouter()
+  const { user_id } = router.query
 
+  useEffect(() => {
+    if (user_id == 0) {
+      setProfileUrl(
+        process.env.NEXT_PUBLIC_URL + 'storage/profilepicplaceholder.svg'
+      )
+      setUserTeams(null)
+      setIsAdmin(false)
+      setUserName('')
+      setEmail('')
+      setPhone('')
+      setCardNr('')
+      setMonday('')
+      setTuesday('')
+      setWednesday('')
+      setThursday('')
+      setFriday('')
+      setSaturday('')
+      setSunday('')
+    }
+  }, [user_id])
+
+  useEffect(() => {
+    if (data.user) {
+      setProfileUrl(
+        process.env.NEXT_PUBLIC_URL +
+          (data?.user?.image_path ?? 'storage/profilepicplaceholder.svg')
+      )
+      setUserTeams(data?.user?.teams ?? null)
+      setIsAdmin(data?.user?.is_admin ?? null)
+      setUserName(data?.user?.name ?? 'error')
+      setEmail(data?.user?.email ?? 'error')
+      setPhone(data?.user?.phone ?? 'error')
+      setCardNr(data?.card_data?.card_id ?? 'error')
+      setMonday(data.work_times[1])
+      setTuesday(data.work_times[2])
+      setWednesday(data.work_times[3])
+      setThursday(data.work_times[4])
+      setFriday(data.work_times[5])
+      setSaturday(data.work_times[6])
+      setSunday(data.work_times[7])
+    }
+  }, [data.user])
   if (!globalToken.userToken || data == null) {
     return <div>access restricted</div>
   }
+  // TODO alt skal laves til hooks
+
   const createUpdateUser = (e) => {
     e.preventDefault()
 
     var weekdays = {
-      Monday: e.target.Monday.value,
-      Tuesday: e.target.Tuesday.value,
-      Wednesday: e.target.Wednesday.value,
-      Thursday: e.target.Thursday.value,
-      Friday: e.target.Friday.value,
-      Saturday: e.target.Saturday.value,
-      Sunday: e.target.Sunday.value,
+      1: monday,
+      2: tuesday,
+      3: wednesday,
+      4: thursday,
+      5: friday,
+      6: saturday,
+      7: sunday,
     }
+    console.log(weekdays)
     var formData = new FormData()
     formData.append('file', selectedFile)
     formData.append('user_id', data?.user?.id ?? 0)
-    formData.append('username', e.target.username.value)
-    formData.append('email', e.target.email.value)
-    formData.append('phone', e.target.phone.value)
-    formData.append('card_id', e.target.card_nr.value)
-    formData.append('is_admin', ~~e.target.is_admin.checked)
-    formData.append('username', e.target.username.value)
+    formData.append('username', userName)
+    formData.append('email', email)
+    formData.append('phone', phone)
+    formData.append('card_id', cardNr)
+    formData.append('is_admin', ~~isAdmin)
     formData.append('team_id', e.target.team_select.value)
     formData.append('weekdays', JSON.stringify(weekdays))
 
@@ -70,12 +128,13 @@ export default function userNotFound({ data }) {
         },
       })
       .then((res) => {
-        console.log(res.data)
+        toast('user Was Updated /created')
         setUserTeams(res?.data?.teams ?? null)
         setProfileUrl(
           process.env.NEXT_PUBLIC_URL +
             (res?.data?.image_path ?? 'storage/profilepicplaceholder.svg')
         )
+        router.push(`/settings/addUser/${res?.data?.id}`)
       })
       .catch((err) => {
         console.log(err)
@@ -123,7 +182,8 @@ export default function userNotFound({ data }) {
                   placeholder="team Name"
                   type="checkbox"
                   name="is_admin"
-                  defaultChecked={data?.user?.is_admin}
+                  onChange={(e) => setIsAdmin(e.target.checked)}
+                  checked={isAdmin}
                 />
               </div>
             </div>
@@ -134,10 +194,11 @@ export default function userNotFound({ data }) {
                   username:
                   <input
                     className="input"
-                    placeholder="team Name"
+                    placeholder="username"
                     type="text"
                     name="username"
-                    defaultValue={data?.user?.name ?? ''}
+                    onChange={(e) => setUserName(e.target.value)}
+                    value={userName}
                   />
                   Email:
                   <input
@@ -145,7 +206,8 @@ export default function userNotFound({ data }) {
                     placeholder="team Name"
                     type="text"
                     name="email"
-                    defaultValue={data?.user?.email ?? ''}
+                    onChange={(e) => setEmail(e.target.value)}
+                    value={email}
                   />
                   phone:
                   <input
@@ -153,7 +215,8 @@ export default function userNotFound({ data }) {
                     placeholder="team Name"
                     type="text"
                     name="phone"
-                    defaultValue={data?.user?.phone ?? ''}
+                    onChange={(e) => setPhone(e.target.value)}
+                    value={phone}
                   />
                   card nr :
                   <input
@@ -161,7 +224,8 @@ export default function userNotFound({ data }) {
                     placeholder="team Name"
                     type="text"
                     name="card_nr"
-                    defaultValue={data?.card_data?.card_id ?? ''}
+                    onChange={(e) => setCardNr(e.target.value)}
+                    value={cardNr}
                   />
                   <br />
                   <p>select team</p>
@@ -190,6 +254,8 @@ export default function userNotFound({ data }) {
                   min={0}
                   max={24}
                   step="0.5"
+                  onChange={(e) => setMonday(e.target.value)}
+                  value={monday}
                 />
                 <p className="pr-2">Tuesday : </p>
                 <input
@@ -198,6 +264,8 @@ export default function userNotFound({ data }) {
                   name="Tuesday"
                   min={0}
                   max={24}
+                  onChange={(e) => setTuesday(e.target.value)}
+                  value={tuesday}
                 />
                 <p className="pr-2">Wednesday : </p>
                 <input
@@ -206,6 +274,8 @@ export default function userNotFound({ data }) {
                   name="Wednesday"
                   min={0}
                   max={24}
+                  onChange={(e) => setWednesday(e.target.value)}
+                  value={wednesday}
                 />
                 <p className="pr-2">Thursday : </p>
                 <input
@@ -214,6 +284,8 @@ export default function userNotFound({ data }) {
                   name="Thursday"
                   min={0}
                   max={24}
+                  onChange={(e) => setThursday(e.target.value)}
+                  value={thursday}
                 />
                 <p className="pr-2">Friday : </p>
                 <input
@@ -222,6 +294,8 @@ export default function userNotFound({ data }) {
                   name="Friday"
                   min={0}
                   max={24}
+                  onChange={(e) => setFriday(e.target.value)}
+                  value={friday}
                 />
                 <p className="pr-2">Saturday : </p>
                 <input
@@ -230,6 +304,8 @@ export default function userNotFound({ data }) {
                   name="Saturday"
                   min={0}
                   max={24}
+                  onChange={(e) => setSaturday(e.target.value)}
+                  value={saturday}
                 />
                 <p className="pr-2">Sunday : </p>
                 <input
@@ -238,10 +314,18 @@ export default function userNotFound({ data }) {
                   name="Sunday"
                   min={0}
                   max={24}
+                  onChange={(e) => setSunday(e.target.value)}
+                  value={sunday}
                 />
               </div>
             </div>
-            <div></div>
+            <div>
+              {user_id != 0 ? (
+                <DeleteUserButton user_id={user_id} />
+              ) : (
+                <div></div>
+              )}
+            </div>
             <div></div>
             <button className="btn btn-blue">save user</button>
           </form>

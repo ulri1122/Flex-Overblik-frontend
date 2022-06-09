@@ -6,6 +6,9 @@ import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useState } from 'react'
+import { useContext, useEffect } from 'react'
+import GlobalContext from '../../context/global-context'
+import Link from 'next/link'
 
 export async function getServerSideProps(context) {
   var user_id = context.query['user_id']
@@ -27,6 +30,7 @@ export async function getServerSideProps(context) {
 }
 
 export default function userId({ data }) {
+  const globalToken = useContext(GlobalContext)
   const [checkInStatus, setCheckInStatus] = useState(data.check_in_state)
   const checkInFromhome = (user_id) => {
     axios
@@ -35,7 +39,6 @@ export default function userId({ data }) {
         check_in_type: '2',
       })
       .then((res) => {
-        console.log(res)
         if (res.data == 'Working_home') {
           setCheckInStatus(res.data)
           toast('you have checked in from home')
@@ -50,7 +53,6 @@ export default function userId({ data }) {
         toast('Wow so error!')
       })
   }
-  console.log(data)
   return (
     <div>
       <div className="grid grid-cols-3">
@@ -66,6 +68,13 @@ export default function userId({ data }) {
           >
             Working home
           </button>
+          {globalToken?.userToken ? (
+            <Link href={'/settings/addUser/' + data.id}>
+              <button className="btn">edit user</button>
+            </Link>
+          ) : (
+            <div></div>
+          )}
         </div>
         <div className="justify-self-end">
           <Image height={50} width={250} src={Logo} alt="Flex overblik" />

@@ -24,7 +24,10 @@ export default function currentTeams({ team, user_id }) {
     <div className="m-4 grid grid-cols-2 rounded-md border-2 border-solid border-gray-500 p-4">
       <div>{team?.team_name}</div>
       <div className="grid justify-end">
-        <button onClick={(e) => removeFromTeam(e, team?.id)} className="btn">
+        <button
+          onClick={(e) => removeFromTeam(e, team?.id)}
+          className="btn btn-red"
+        >
           Remove
         </button>
       </div>
