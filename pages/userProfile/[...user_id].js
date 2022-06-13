@@ -9,6 +9,7 @@ import { useState } from 'react'
 import { useContext, useEffect } from 'react'
 import GlobalContext from '../../context/global-context'
 import Link from 'next/link'
+import axiosToken from '../../src/lib/backendAPI'
 
 export async function getServerSideProps(context) {
   var user_id = context.query['user_id']
@@ -32,6 +33,9 @@ export async function getServerSideProps(context) {
 export default function userId({ data }) {
   const globalToken = useContext(GlobalContext)
   const [checkInStatus, setCheckInStatus] = useState(data.check_in_state)
+  const [checkInDays, setCheckInDays] = useState(data.checkInDays)
+  const [currentFlex, setCurrentFlex] = useState(data.current_flex)
+  const [datahook, setDataHook] = useState(data)
   const checkInFromhome = (user_id) => {
     axios
       .post(process.env.NEXT_PUBLIC_API_URL + 'check_in', {
@@ -39,39 +43,91 @@ export default function userId({ data }) {
         check_in_type: '2',
       })
       .then((res) => {
-        if (res.data == 'Working_home') {
-          setCheckInStatus(res.data)
-          toast('you have checked in from home')
-        } else if (res.data == 'not_checked_in') {
-          setCheckInStatus(res.data)
-          toast('you have checked out')
-        } else {
-          toast('Wow so error!')
-        }
+        console.log(res.data)
+        setCurrentFlex(res.data.current_flex)
+        setCheckInStatus(res.data.check_in_state)
+        getCheckInDays(user_id)
       })
       .catch((err) => {
         toast('Wow so error!')
       })
   }
+
+  const getCheckInDays = (user_id) => {
+    axios
+      .get(process.env.NEXT_PUBLIC_API_URL + `getUserProfile`, {
+        params: {
+          id: user_id,
+        },
+      })
+      .then((res) => {
+        setCheckInDays(res.data.checkInDays)
+      })
+      .catch((err) => {})
+  }
+  const addFlex = (user_id) => {
+    let flex_amount = prompt('Number in hours will be added to the user')
+    if (flex_amount == null || flex_amount == '') {
+      return
+    }
+
+    axiosToken
+      .post(process.env.NEXT_PUBLIC_API_URL + `addFlex`, {
+        flex_amount: flex_amount,
+        user_id: user_id,
+      })
+      .then((res) => {
+        getUserData(user_id)
+      })
+      .catch((err) => {})
+  }
+  const getUserData = (user_id) => {
+    var data = axios
+      .get(process.env.NEXT_PUBLIC_API_URL + `getUserProfile`, {
+        params: {
+          id: user_id,
+        },
+      })
+      .then((res) => {
+        setCurrentFlex(res.data.current_flex)
+        setCheckInStatus(res.data.check_in_state)
+        getCheckInDays(user_id)
+        setDataHook(res.data)
+      })
+      .catch((err) => {
+        toast('wow mutch error')
+      })
+  }
+
   return (
     <div>
       <div className="grid grid-cols-3">
         <div>
           <h1 className="justify-self-start text-2xl">
-            {data?.name ?? 'username placeholder'}
+            {datahook?.name ?? 'username placeholder'}
           </h1>
         </div>
-        <div>
+        <div className="">
           <button
-            onClick={() => checkInFromhome(data.id)}
+            onClick={() => checkInFromhome(datahook.id)}
             className="btn btn-blue"
           >
             Working home
           </button>
           {globalToken?.userToken ? (
-            <Link href={'/settings/addUser/' + data.id}>
-              <button className="btn">edit user</button>
-            </Link>
+            <div>
+              <Link href={'/settings/addUser/' + datahook.id}>
+                <button className="btn btn-blue">edit user</button>
+              </Link>
+              <div>
+                <button
+                  onClick={() => addFlex(datahook.id)}
+                  className="btn btn-blue"
+                >
+                  tilføj flex
+                </button>
+              </div>
+            </div>
           ) : (
             <div></div>
           )}
@@ -82,10 +138,14 @@ export default function userId({ data }) {
       </div>
       <div className="grid grid-cols-3">
         <div>
-          <UserProfileCard user={data} checkInStatus={checkInStatus} />
+          <UserProfileCard
+            user={datahook}
+            currentFlex={currentFlex}
+            checkInStatus={checkInStatus}
+          />
         </div>
         <div className="col-span-2">
-          <FlexTimesTable data={data} />
+          <FlexTimesTable checkInDays={checkInDays} />
         </div>
       </div>
     </div>

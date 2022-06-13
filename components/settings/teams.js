@@ -23,7 +23,6 @@ export default function teams({ team }) {
   const [teamName, setTeamName] = useState(team.team_name)
 
   const updateTeam = (e, team_id, team_name) => {
-    console.log(team_name)
     axiosToken
       .post(process.env.NEXT_PUBLIC_API_URL + 'updateTeamName', {
         team_id: team_id,

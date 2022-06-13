@@ -4,10 +4,11 @@ import moment from 'moment'
 import UserWorkSate from './userWorkState'
 import 'moment-duration-format'
 
-export default function userProfileCard({ user, checkInStatus }) {
+export default function userProfileCard({ user, checkInStatus, currentFlex }) {
   return (
     <div>
       <div className="flex justify-center">
+        <UserWorkSate state={checkInStatus} />
         <Image
           width={200}
           height={200}
@@ -24,9 +25,8 @@ export default function userProfileCard({ user, checkInStatus }) {
         <div>Phone: {user?.phone ?? 'placeholderPhone'}</div>
         <div>email: {user?.email ?? 'placeholderEmail'}</div>
         <div className="pt-10 text-center text-xl ">
-          {moment.duration(user?.current_flex, 'seconds').format('hh:mm:ss')}
+          {moment.duration(currentFlex, 'seconds').format('H:mm:ss')}
         </div>
-        <UserWorkSate state={checkInStatus} />
       </div>
     </div>
   )

@@ -32,7 +32,6 @@ export default function Sidebar() {
         toast('you are now super user.')
       })
       .catch((err) => {
-        console.log(err)
         toast('Wow so error!')
       })
   }
@@ -47,6 +46,10 @@ export default function Sidebar() {
         toast('you are no longer super user')
       })
       .catch((err) => {
+        localStorage.removeItem('token')
+        globalToken.update({
+          userToken: '',
+        })
         toast('Wow so error!')
       })
   }
