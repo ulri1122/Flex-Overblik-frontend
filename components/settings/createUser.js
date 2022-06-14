@@ -326,9 +326,7 @@ export default function createUser({ data }) {
           )
         })}
       </div>
-      <div>
-        <AddTimeOff data={data} />
-      </div>
+      <div>{user_id != 0 ? <AddTimeOff data={data} /> : <div></div>}</div>
     </div>
   )
 }

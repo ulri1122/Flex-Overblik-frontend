@@ -74,13 +74,16 @@ export default function addTimeOff({ data }) {
         </div>
       </form>
       <div className="pt-10">
-        {daysOff?.map((off_date, i) => {
-          return (
-            <div key={i}>
-              <OffTimeTable data={off_date} />
-            </div>
-          )
-        })}
+        <div>
+          {daysOff?.map((off_date, i) => {
+            return (
+              <div key={i}>
+                <OffTimeTable data={off_date} />
+              </div>
+            )
+          })}
+        </div>
+        <div></div>
       </div>
     </div>
   )

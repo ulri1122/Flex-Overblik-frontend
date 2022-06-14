@@ -3,7 +3,6 @@ import GlobalContext from '../../../context/global-context'
 import axios from 'axios'
 import { Tab } from '@headlessui/react'
 import CreateUser from '../../../components/settings/createUser'
-import AddTimeOff from '../../../components/settings/addTimeOff'
 export async function getServerSideProps(context) {
   var user_id = context.query['user_id'][0]
   var data = await axios
