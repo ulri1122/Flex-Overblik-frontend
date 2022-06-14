@@ -26,7 +26,6 @@ export default function userNotFound({ data }) {
   if (!globalToken.userToken || data == null) {
     return <div>access restricted</div>
   }
-  console.log(data)
 
   return (
     <div>

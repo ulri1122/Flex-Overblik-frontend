@@ -25,7 +25,20 @@ export default function userCard({ user }) {
             <div>{user.name}</div>
 
             <div>
-              {moment.duration(user?.current_flex, 'seconds').format('H:mm:ss')}
+              {user?.current_flex < 0 ? (
+                <div className=" text-red-700 ">
+                  {moment
+                    .duration(user?.current_flex, 'seconds')
+                    .format('H:mm:ss')}
+                </div>
+              ) : (
+                <div className="  text-blue-700 ">
+                  +
+                  {moment
+                    .duration(user?.current_flex, 'seconds')
+                    .format('H:mm:ss')}
+                </div>
+              )}
             </div>
           </div>
           <div className="flex items-center justify-center">

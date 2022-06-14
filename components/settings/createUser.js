@@ -111,8 +111,12 @@ export default function createUser({ data }) {
         },
       })
       .then((res) => {
+        if (res.data.nfc_cards.findIndex((x) => x.card_id == cardNr) == -1) {
+          toast('card_id already excists')
+        }
+
         toast('user Was Updated /created')
-        setUserTeams(res?.data?.teams ?? null)
+        if (cardNr) setUserTeams(res?.data?.teams ?? null)
         setProfileUrl(
           process.env.NEXT_PUBLIC_URL +
             (res?.data?.image_path ?? 'storage/profilepicplaceholder.svg')

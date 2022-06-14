@@ -1,7 +1,12 @@
 import Link from 'next/link'
 import HomeIcon from '../assets/images/icons/home'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faWrench, faWorm, faUserPlus } from '@fortawesome/free-solid-svg-icons'
+import {
+  faWrench,
+  faArrowRightFromBracket,
+  faUserPlus,
+  faHouse,
+} from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -55,34 +60,26 @@ export default function Sidebar() {
   }
 
   return (
-    <div className="fixed min-h-screen w-10 bg-secondary px-1  md:w-40">
-      <ul className="relative">
-        <li className="relative md:py-4">
-          <Link href="/">
-            <a className="flex items-center overflow-hidden rounded text-center text-sm transition  duration-300 ease-in-out hover:bg-Hower hover:text-gray-900 md:h-16 md:py-4 md:px-6">
-              <HomeIcon className="md:ml-4" width={60} height={100} />
-            </a>
-          </Link>
-
-          {globalToken.userToken ? (
-            <div>
-              <Link href="/settings/addUser/0">
-                <button>
-                  <a className="flex items-center overflow-hidden rounded text-center text-sm transition  duration-300 ease-in-out hover:bg-Hower hover:text-gray-900 md:h-16 md:py-4 md:px-6">
-                    <FontAwesomeIcon
-                      style={{
-                        fontSize: 100,
-                        color: 'white',
-                        height: 60,
-                        width: 50,
-                      }}
-                      icon={faUserPlus}
-                    />
-                  </a>
-                </button>
-              </Link>
-              <button onClick={() => removeSuperUserMode()}>
-                <a className="flex items-center overflow-hidden rounded text-center text-sm transition  duration-300 ease-in-out hover:bg-Hower hover:text-gray-900 md:h-16 md:py-4 md:px-6">
+    <div className="grid grid-cols-1">
+      <div className="fixed min-h-screen w-10 bg-secondary pt-4 md:w-40">
+        {globalToken.userToken ? (
+          <div className="grid grid-cols-1 gap-2">
+            <Link href="/">
+              <a className="rounded text-center text-sm transition duration-300 ease-in-out hover:bg-Hower ">
+                <FontAwesomeIcon
+                  style={{
+                    fontSize: 100,
+                    color: 'white',
+                    height: 60,
+                    width: 50,
+                  }}
+                  icon={faHouse}
+                />
+              </a>
+            </Link>
+            <Link href="/settings/addUser/0">
+              <button className=" rounded text-center text-sm transition duration-300 ease-in-out hover:bg-Hower hover:text-gray-900  ">
+                <a>
                   <FontAwesomeIcon
                     style={{
                       fontSize: 100,
@@ -90,14 +87,48 @@ export default function Sidebar() {
                       height: 60,
                       width: 50,
                     }}
-                    icon={faWorm}
+                    icon={faUserPlus}
                   />
                 </a>
               </button>
-            </div>
-          ) : (
-            <button onClick={() => superUserMode()}>
-              <a className="flex items-center overflow-hidden rounded text-center text-sm transition  duration-300 ease-in-out hover:bg-Hower hover:text-gray-900 md:h-16 md:py-4 md:px-6">
+            </Link>
+            <button
+              className=" rounded text-center text-sm transition duration-300 ease-in-out hover:bg-Hower hover:text-gray-900 "
+              onClick={() => removeSuperUserMode()}
+            >
+              <a>
+                <FontAwesomeIcon
+                  style={{
+                    fontSize: 100,
+                    color: 'white',
+                    height: 60,
+                    width: 50,
+                  }}
+                  icon={faArrowRightFromBracket}
+                />
+              </a>
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-4">
+            <Link href="/">
+              <a className="rounded text-center text-sm transition duration-300 ease-in-out hover:bg-Hower ">
+                <FontAwesomeIcon
+                  style={{
+                    fontSize: 100,
+                    color: 'white',
+                    height: 60,
+                    width: 50,
+                  }}
+                  icon={faHouse}
+                />
+              </a>
+            </Link>
+            <button
+              className="rounded text-center text-sm transition  duration-300 ease-in-out hover:bg-Hower hover:text-gray-900  "
+              onClick={() => superUserMode()}
+            >
+              <a>
                 <FontAwesomeIcon
                   style={{
                     fontSize: 100,
@@ -109,9 +140,9 @@ export default function Sidebar() {
                 />
               </a>
             </button>
-          )}
-        </li>
-      </ul>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

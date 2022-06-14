@@ -43,7 +43,6 @@ export default function userId({ data }) {
         check_in_type: '2',
       })
       .then((res) => {
-        console.log(res.data)
         setCurrentFlex(res.data.current_flex)
         setCheckInStatus(res.data.check_in_state)
         getCheckInDays(user_id)
@@ -62,6 +61,8 @@ export default function userId({ data }) {
       })
       .then((res) => {
         setCheckInDays(res.data.checkInDays)
+        setCheckInStatus(res.data.check_in_state)
+        setDataHook(res.data)
       })
       .catch((err) => {})
   }
@@ -107,7 +108,7 @@ export default function userId({ data }) {
             {datahook?.name ?? 'username placeholder'}
           </h1>
         </div>
-        <div className="">
+        <div className="grid grid-cols-2">
           <button
             onClick={() => checkInFromhome(datahook.id)}
             className="btn btn-blue"
@@ -115,18 +116,16 @@ export default function userId({ data }) {
             Working home
           </button>
           {globalToken?.userToken ? (
-            <div>
+            <div className="grid grid-cols-2">
               <Link href={'/settings/addUser/' + datahook.id}>
                 <button className="btn btn-blue">edit user</button>
               </Link>
-              <div>
-                <button
-                  onClick={() => addFlex(datahook.id)}
-                  className="btn btn-blue"
-                >
-                  tilføj flex
-                </button>
-              </div>
+              <button
+                onClick={() => addFlex(datahook.id)}
+                className="btn btn-blue"
+              >
+                tilføj flex
+              </button>
             </div>
           ) : (
             <div></div>

@@ -5,7 +5,6 @@ import { faSortDown } from '@fortawesome/free-solid-svg-icons'
 import { Disclosure } from '@headlessui/react'
 import FlexTimeSubTable from './flexTimeSubTable'
 export default function flexTimeTable({ checkInDays }) {
-  console.log(checkInDays)
   return (
     <div className="pt-10">
       <div className="grid grid-cols-1 ">

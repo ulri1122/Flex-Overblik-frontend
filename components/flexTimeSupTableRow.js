@@ -15,7 +15,6 @@ export default function flexTimeSupTableRow({ time }) {
   const [checkOutTime, setcheckOutTime] = useState(
     moment.utc(time.to).local().format('YYYY-MM-DDTHH:mm:ss')
   )
-  console.log(checkOutTime)
   const UpdateTimeStamp = (e) => {
     var from_time = moment(checkinTime).format()
     var to_time = moment(checkOutTime).format()

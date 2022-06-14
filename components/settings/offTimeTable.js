@@ -4,7 +4,6 @@ import { toast } from 'react-toastify'
 import axiosToken from '../../src/lib/backendAPI'
 
 export default function offTimeTable({ data }) {
-  console.log(data.days_off)
   const [startDate, setStartDate] = useState(
     moment.utc(data.start_date).local().format('YYYY-MM-DD')
   )

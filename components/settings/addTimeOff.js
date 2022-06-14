@@ -11,8 +11,7 @@ export default function addTimeOff({ data }) {
   const [offType, setOffType] = useState('')
   const router = useRouter()
   const { user_id } = router.query
-  console.log()
-  const [daysOff, setDaysOff] = useState(data.days_off)
+  const [daysOff, setDaysOff] = useState(data.days_off ?? null)
   const addDaysOff = (e) => {
     e.preventDefault()
 
@@ -75,7 +74,7 @@ export default function addTimeOff({ data }) {
         </div>
       </form>
       <div className="pt-10">
-        {daysOff.map((off_date, i) => {
+        {daysOff?.map((off_date, i) => {
           return (
             <div key={i}>
               <OffTimeTable data={off_date} />

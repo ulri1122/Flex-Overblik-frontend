@@ -29,9 +29,11 @@ function checkInScreen() {
               placeholder="Scan Kort"
               type="text"
               name="search"
+              ref={(input) => input && input.focus()}
               onChange={(e) => setCardID(e.target.value)}
             />
           </form>
+          <div className="pt-20"> Brug kort læser for at tjekke ind</div>
         </div>
       </div>
     </div>

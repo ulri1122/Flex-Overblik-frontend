@@ -24,9 +24,15 @@ export default function userProfileCard({ user, checkInStatus, currentFlex }) {
         <div>Username: {user?.name ?? 'placeholderName'}</div>
         <div>Phone: {user?.phone ?? 'placeholderPhone'}</div>
         <div>email: {user?.email ?? 'placeholderEmail'}</div>
-        <div className="pt-10 text-center text-xl ">
-          {moment.duration(currentFlex, 'seconds').format('H:mm:ss')}
-        </div>
+        {currentFlex < 0 ? (
+          <div className="pt-10 text-center text-xl text-red-700 ">
+            {moment.duration(currentFlex, 'seconds').format('H:mm:ss')}
+          </div>
+        ) : (
+          <div className="pt-10 text-center text-xl text-blue-700 ">
+            +{moment.duration(currentFlex, 'seconds').format('H:mm:ss')}
+          </div>
+        )}
       </div>
     </div>
   )

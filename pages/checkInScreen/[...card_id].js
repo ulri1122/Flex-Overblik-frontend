@@ -3,6 +3,7 @@ import Logo from '../../assets/images/flexoverblik.png'
 import axios from 'axios'
 import UserNotFound from '../../components/userNotFound'
 import UserFound from '../../components/userFound'
+import { useRouter } from 'next/router'
 
 export async function getServerSideProps(context) {
   var card_id = context.query['card_id']
@@ -23,13 +24,19 @@ export async function getServerSideProps(context) {
 }
 
 function checkInScreen({ data }) {
+  const router = useRouter()
+
+  setTimeout(function () {
+    router.push(`/checkInScreen`)
+  }, 3000)
+
   return (
     <div className="grid grid-cols-1">
       <div className="flex justify-center">
         <Image src={Logo} alt="Flex overblik" />
       </div>
       <div className="flex justify-center">
-        <div className="pt-56">
+        <div className="pt-20">
           {data?.error ? <UserNotFound /> : <UserFound data={data} />}
         </div>
       </div>
