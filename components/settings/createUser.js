@@ -111,7 +111,10 @@ export default function createUser({ data }) {
         },
       })
       .then((res) => {
-        if (res.data.nfc_cards.findIndex((x) => x.card_id == cardNr) == -1) {
+        if (
+          (res?.data?.nfc_cards?.findIndex((x) => x?.card_id == cardNr) ??
+            false) == -1
+        ) {
           toast('card_id already excists')
         }
 
@@ -123,7 +126,9 @@ export default function createUser({ data }) {
         )
         router.push(`/settings/addUser/${res?.data?.id}`)
       })
-      .catch((err) => {})
+      .catch((err) => {
+        toast('wow error')
+      })
   }
   return (
     <div>
