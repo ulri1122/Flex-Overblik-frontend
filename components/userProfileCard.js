@@ -1,8 +1,8 @@
-import Image from 'next/dist/client/image'
 import React from 'react'
 import moment from 'moment'
 import UserWorkSate from './userWorkState'
 import 'moment-duration-format'
+import Image from 'next/image';
 
 export default function userProfileCard({ user, checkInStatus, currentFlex }) {
   return (

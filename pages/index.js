@@ -24,7 +24,6 @@ export async function getServerSideProps(context) {
 }
 function DashBoard({ data }) {
   const globalToken = useContext(GlobalContext)
-
   return (
     <div>
       <div className="grid grid-cols-2">
@@ -39,7 +38,7 @@ function DashBoard({ data }) {
       </div>
 
       <div className=" 2xl;grid-cols-4 grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-4">
-        {data.map((team, i) => {
+        {data?.map((team, i) => {
           {
             return (
               <div key={i}>
